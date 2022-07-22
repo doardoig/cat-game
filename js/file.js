@@ -1,4 +1,6 @@
-let pageElements = {
+let statusIntervalID;
+
+const pageElements = {
     container: document.querySelector("#container"),
     cat: document.querySelector("#cat"),
     road: document.querySelector("#road"),
@@ -8,67 +10,111 @@ let pageElements = {
     block: document.querySelector("#block"),
 }
 
-let score = {
+const score = {
     interval: null,
     playerScore: 0,
 }
 
+const hideGameOverText = () => {
+    pageElements.gameOver.style.display = "none";
+}
 
+const showGameOverText = () => {
+    pageElements.gameOver.style.display = "block";
+}
 
-//função do score
-let scoreCounter = () => {
+const enableObstacleAnimation = () => {
+    block.classList.add("blockActive");
+}
+
+const disableObstacleAnimation = () => {
+    pageElements.block.classList.remove("blockActive");
+}
+
+const enableRoadAnimation = () => {
+    pageElements.road.firstElementChild.style.animation = "roadAnimate 1.5s linear infinite";
+}
+
+const disableRoadAnimation = () => {
+    pageElements.road.firstElementChild.style.animation = "none";
+}
+
+const enableCloudAnimation = () => {
+    pageElements.cloud.firstElementChild.style.animation = "cloudAnimate 50s linear infinite";
+}
+
+const disableCloudAnimation = () => {
+    pageElements.cloud.firstElementChild.style.animation = "none";
+}
+
+const increaseScore = () => {
     score.playerScore++;
     pageElements.score.innerHTML = `Score <b>${score.playerScore}</b>`;
 }
 
+const enableScore = () => {
+    score.playerScore = 0;
+    score.interval = setInterval(increaseScore, 200);
+}
 
-//inicio de jogo
-window.addEventListener("keydown", (start) => {
-    //    console.log(start);
-    if (start.code == "Space") {
-        pageElements.gameOver.style.display = "none";
-        block.classList.add("blockActive");
-        pageElements.road.firstElementChild.style.animation = "roadAnimate 1.5s linear infinite";
-        pageElements.cloud.firstElementChild.style.animation = "cloudAnimate 50s linear infinite";
+const disableScore = () => {
+    clearInterval(score.interval);
+    score.playerScore = 0;
+}
 
-        //score
-        score.playerScore = 0;
-        score.interval = setInterval(scoreCounter, 200);
+const isGameOver = () => {
+    const catBottomPosition = parseInt(getComputedStyle(pageElements.cat).getPropertyValue("bottom"));
+    const obstacleLeftPosition = parseInt(getComputedStyle(block).getPropertyValue("left"));
+    return catBottomPosition <= 90 && obstacleLeftPosition >= 20 && obstacleLeftPosition <= 145;
+}
+
+const stopGameStatusTracking = () => {
+    clearInterval(statusIntervalID)
+}
+
+const setupGameOver = () => {
+    disableCloudAnimation();
+    disableObstacleAnimation();
+    disableRoadAnimation();
+    disableScore();
+    showGameOverText();
+    stopGameStatusTracking();
+}
+
+const trackGameStatus = () => {
+    statusIntervalID = setInterval(() => {
+        if (isGameOver()) {
+            setupGameOver();
+        }
+    }, 10);
+}
+
+const onInitGame = (event) => {
+    if (event.code == "Space") {
+        enableCloudAnimation();
+        enableObstacleAnimation();
+        enableRoadAnimation();
+        enableScore();
+        hideGameOverText();
+        trackGameStatus();
     }
-});
+}
 
-
-//pulo do personagem
-window.addEventListener("keydown", (e) => {
-    //    console.log(e);
-
-    if (e.key == "ArrowUp")
-        if (pageElements.cat.classList != "catActive") {
-            pageElements.cat.classList.add("catActive");
-
-            //                remove class após 0,5 segundos
+const onCharacterJump = (event) => {
+    const catActiveClass = "catActive";
+    const catClassList = pageElements.cat.classList
+    if (event.key == "ArrowUp")
+        if (!catClassList.contains(catActiveClass)) {
+            catClassList.add(catActiveClass);
             setTimeout(() => {
-                pageElements.cat.classList.remove("catActive");
+                catClassList.remove(catActiveClass);
             }, 500);
         }
-});
+}
 
-//'Game Over' se o 'Character' bater no 'Block' 
-let result = setInterval(() => {
-    let catBottom = parseInt(getComputedStyle(pageElements.cat).getPropertyValue("bottom"));
-    //    console.log("catBottom" + catBottom);
+const setupEventListeners = () => {
+    window.addEventListener("keydown", onInitGame);
+    window.addEventListener("keydown", onCharacterJump);
+}
 
-    let blockLeft = parseInt(getComputedStyle(block).getPropertyValue("left"));
-    //    console.log("BlockLeft" + blockLeft);
-
-    if (catBottom <= 90 && blockLeft >= 20 && blockLeft <= 145) {
-        //        console.log("Game Over");
-
-        pageElements.gameOver.style.display = "block";
-        pageElements.block.classList.remove("blockActive");
-        pageElements.road.firstElementChild.style.animation = "none";
-        pageElements.cloud.firstElementChild.style.animation = "none";
-        clearInterval(score.interval);
-        score.playerScore = 0;
-    }
-}, 10);
+setupEventListeners();
