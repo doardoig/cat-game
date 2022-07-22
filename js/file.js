@@ -1,5 +1,3 @@
-let statusIntervalID;
-
 const pageElements = {
     container: document.querySelector("#container"),
     cat: document.querySelector("#cat"),
@@ -68,6 +66,8 @@ const isGameOver = () => {
     return catBottomPosition <= 90 && obstacleLeftPosition >= 20 && obstacleLeftPosition <= 145;
 }
 
+let statusIntervalID;
+
 const stopGameStatusTracking = () => {
     clearInterval(statusIntervalID)
 }
@@ -101,15 +101,16 @@ const onInitGame = (event) => {
 }
 
 const onCharacterJump = (event) => {
-    const catActiveClass = "catActive";
-    const catClassList = pageElements.cat.classList
-    if (event.key == "ArrowUp")
+    if (event.key == "ArrowUp") {
+        const catActiveClass = "catActive";
+        const catClassList = pageElements.cat.classList
         if (!catClassList.contains(catActiveClass)) {
             catClassList.add(catActiveClass);
             setTimeout(() => {
                 catClassList.remove(catActiveClass);
             }, 500);
         }
+    }
 }
 
 const setupEventListeners = () => {
