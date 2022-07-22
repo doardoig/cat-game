@@ -90,32 +90,33 @@ const trackGameStatus = () => {
 }
 
 const onInitGame = (event) => {
-    if (event.code == "Space") {
-        enableCloudAnimation();
-        enableObstacleAnimation();
-        enableRoadAnimation();
-        enableScore();
-        hideGameOverText();
-        trackGameStatus();
-    }
+    enableCloudAnimation();
+    enableObstacleAnimation();
+    enableRoadAnimation();
+    enableScore();
+    hideGameOverText();
+    trackGameStatus();
 }
 
 const onCharacterJump = (event) => {
-    if (event.key == "ArrowUp") {
-        const catActiveClass = "catActive";
-        const catClassList = pageElements.cat.classList
-        if (!catClassList.contains(catActiveClass)) {
-            catClassList.add(catActiveClass);
-            setTimeout(() => {
-                catClassList.remove(catActiveClass);
-            }, 500);
-        }
+    const catActiveClass = "catActive";
+    const catClassList = pageElements.cat.classList
+    if (!catClassList.contains(catActiveClass)) {
+        catClassList.add(catActiveClass);
+        setTimeout(() => {
+            catClassList.remove(catActiveClass);
+        }, 500);
     }
 }
 
-const setupEventListeners = () => {
-    window.addEventListener("keydown", onInitGame);
-    window.addEventListener("keydown", onCharacterJump);
+const onKeyPress = (event) => {
+    if (event.key == "ArrowUp") {
+        onCharacterJump(event);
+    }
+    if (event.code == "Space") {
+        onInitGame(event);
+    }
 }
 
-setupEventListeners();
+window.addEventListener("keydown", onKeyPress);
+  
