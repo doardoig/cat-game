@@ -122,13 +122,14 @@ body {
     height: 80px;
     width: 2000px;
     position: absolute;
-    left: -2000px;
+    left: -200px;
     animation: none;
 }
 
+
 @keyframes cloudAnimate {
     0% {
-        left: -2000px;
+        left: -200px;
     }
 
     100% {
