@@ -89,7 +89,7 @@ const trackGameStatus = () => {
     }, 10);
 }
 
-const onInitGame = (event) => {
+const onInitGame = () => {
     enableCloudAnimation();
     enableObstacleAnimation();
     enableRoadAnimation();
@@ -98,7 +98,7 @@ const onInitGame = (event) => {
     trackGameStatus();
 }
 
-const onCharacterJump = (event) => {
+const onCharacterJump = () => {
     const catActiveClass = "catActive";
     const catClassList = pageElements.cat.classList
     if (!catClassList.contains(catActiveClass)) {
@@ -111,10 +111,10 @@ const onCharacterJump = (event) => {
 
 const onKeyPress = (event) => {
     if (event.key == "ArrowUp") {
-        onCharacterJump(event);
+        onCharacterJump();
     }
     if (event.code == "Space") {
-        onInitGame(event);
+        onInitGame();
     }
 }
 
