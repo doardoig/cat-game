@@ -22,7 +22,7 @@ const showGameOverText = () => {
 }
 
 const enableObstacleAnimation = () => {
-    block.classList.add("blockActive");
+    pageElements.block.classList.add("blockActive");
 }
 
 const disableObstacleAnimation = () => {
@@ -62,7 +62,7 @@ const disableScore = () => {
 
 const isGameOver = () => {
     const catBottomPosition = parseInt(getComputedStyle(pageElements.cat).getPropertyValue("bottom"));
-    const obstacleLeftPosition = parseInt(getComputedStyle(block).getPropertyValue("left"));
+    const obstacleLeftPosition = parseInt(getComputedStyle(pageElements.block).getPropertyValue("left"));
     return catBottomPosition <= 90 && obstacleLeftPosition >= 20 && obstacleLeftPosition <= 145;
 }
 
