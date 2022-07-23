@@ -1,5 +1,4 @@
 const pageElements = {
-    container: document.querySelector("#container"),
     cat: document.querySelector("#cat"),
     road: document.querySelector("#road"),
     cloud: document.querySelector("#cloud"),
